@@ -2,14 +2,22 @@ name: CRON to post AOC leaderboard data to Slack
 on:
   workflow_dispatch: {}
   schedule:
-    # - cron: '0 15 * * *' # Runs daily at 3 PM UTC(aka 10 AM EST)
-    - cron: '45 21 * * *' # Runs daily at 9:45 PM UTC -- THIS IS A TEST
+    - cron: '0 15 * * *' # Runs daily at 3 PM UTC(aka 10 AM EST)
 jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      # Only run this script if Advent of Code is actually happening
+      - name: Check if date is between Dec 1st and Jan 1st
+        run: |
+          date=$(date +'%m-%d')
+          if [[ "$date" < "12-01" || "$date" > "01-01" ]]; then
+            echo "Not within the desired date range. Exiting."
+            exit 0
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
