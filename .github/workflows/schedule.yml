@@ -1,5 +1,6 @@
 name: CRON to post AOC leaderboard data to Slack
 on:
+  workflow_dispatch: {}
   schedule:
     # - cron: '0 15 * * *' # Runs daily at 3 PM UTC(aka 10 AM EST)
     - cron: '45 21 * * *' # Runs daily at 9:45 PM UTC -- THIS IS A TEST
