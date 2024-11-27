@@ -1,0 +1,13 @@
+name: CRON to post AOC leaderboard data to Slack
+on:
+  schedule:
+    # - cron: '0 15 * * *' # Runs daily at 3 PM UTC(aka 10 AM EST)
+    - cron: '45 21 * * *' # Runs daily at 9:45 PM UTC -- THIS IS A TEST
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Run JavaScript
+        run: node scripts/slack.js
