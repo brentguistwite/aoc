@@ -1,8 +1,37 @@
 import fetch from 'node-fetch';
 
 /**
+ * @typedef MemberData
+ * @prop {number} id The member's id.
+ * @prop {number} local_score The member's score.
+ * @prop {number} stars The number of stars the member has.
+ * @prop {string} name The member's name.
+ *
+ *
+ * @typedef {Object<string, MemberData} Members
+ *
+ *
+ * @typedef Leaderboard
+ * @prop {Members} members List of members on the leaderboard.
+ * @prop {string} event The year of the event(ex: 2024).
+ * @prop {number} owner_id The id of the owner of the leaderboard.
+ *
+ * @typedef SlackData
+ * @prop {string} firstPlace The name of the member in first place.
+ * @prop {number} firstScore The score of the member in first place.
+ * @prop {number} firstStars The number of stars the member in first place has.
+ * @prop {string} secondPlace The name of the member in second place.
+ * @prop {number} secondScore The score of the member in second place.
+ * @prop {number} secondStars The number of stars the member in second place has.
+ * @prop {string} thirdPlace The name of the member in third place.
+ * @prop {number} thirdScore The score of the member in third place.
+ * @prop {number} thirdStars The number of stars the member in third place has.
+ * @prop {number} date The current date.
+ */
+
+/**
  * Fetch private leaderboard data from Advent of Code.
- * @returns {Promise<unknown>} - Leaderboard data.
+ * @returns {Promise<Leaderboard>} - Leaderboard data.
  */
 async function getPrivateLeaderboard() {
   const year = new Date().getFullYear();
@@ -36,30 +65,34 @@ async function getPrivateLeaderboard() {
 
 /**
  * Format Advent of Code leaderboard data into the shape the slack webhook expects.
+ * @param {Leaderboard} data - Leaderboard data.
+ * @returns {SlackData} - Formatted data.
  */
 function formatData(data) {
-  console.log('data', JSON.stringify(data, null, 2));
-  // ${place}) ${score} ${starCount} ${name}
-  // 1) 900 *** brentguistwite
-  const members = Object.values(data.members).sort((a, b) => b.local_score - a.local_score);
-  const obj = {
-    firstPlace: members[0].name,
-    firstScore: members[0].local_score,
-    firstStars: members[0].stars,
-    secondPlace: members[1].name,
-    secondScore: members[1].local_score,
-    secondStars: members[1].stars,
-    thirdPlace: members[2].name,
-    thirdScore: members[2].local_score,
-    thirdStars: members[2].stars,
+  const [
+    firstPlace,
+    secondPlace,
+    thirdPlace,
+  ] = Object.values(data.members).sort((a, b) => b.local_score - a.local_score);
+
+  return {
+    firstPlace: firstPlace.name,
+    firstScore: firstPlace.local_score,
+    firstStars: firstPlace.stars,
+    secondPlace: secondPlace.name,
+    secondScore: secondPlace.local_score,
+    secondStars: secondPlace.stars,
+    thirdPlace: thirdPlace.name,
+    thirdScore: thirdPlace.local_score,
+    thirdStars: thirdPlace.stars,
     date: new Date().getDate(),
   };
-
-  return obj;
 }
 
 /**
  * Post Advent of Code leaderboard data to Slack workflow.
+ * @param {SlackData} data - Formatted leaderboard data.
+ * @returns {Promise<void>}
  */
 async function postToSlack(data) {
   // DONT CHANGE THIS URL
