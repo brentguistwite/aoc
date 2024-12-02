@@ -61,11 +61,6 @@ function formatData(data) {
  * Post Advent of Code leaderboard data to Slack workflow.
  */
 async function postToSlack(data) {
-  console.log('data', JSON.stringify(data, null, 2));
-  const foo = true;
-  if (foo) {
-    return null;
-  }
   // DONT CHANGE THIS URL
   const slackWebhookURL = 'https://hooks.slack.com/triggers/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';
 
