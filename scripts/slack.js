@@ -5,7 +5,8 @@ import fetch from 'node-fetch';
  * @returns {Promise<unknown>} - Leaderboard data.
  */
 async function getPrivateLeaderboard() {
-  const url = 'https://adventofcode.com/2024/leaderboard/private/view/674817.json';
+  const year = new Date().getFullYear();
+  const url = `https://adventofcode.com/${year}/leaderboard/private/view/674817.json`;
   // To get this session cookie, visit the url above and inspect the request in the network tab. Copy the value of the Cookie header.
   const sessionCookie =
     '_ga=GA1.2.1991867695.1732742972; _gid=GA1.2.996704835.1732742972; session=53616c7465645f5fe72550b2ebe70449bac670c43e58a983bc8fc3a08b543f863a6d993c2c4c44db0415642d2a7c53f05528cf13fe03f681b4932ced7b2a7823; _ga_MHSNPJKWC7=GS1.2.1732742972.1.1.1732743055.0.0.0';
